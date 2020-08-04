@@ -21,8 +21,8 @@
 #define PRINT_USAGE(void) printf("usage: %s [-la] [file ...]\n", PROGRAM_NAME)
 
 struct options {
-    int verbose; /* corresponds to -l flag */
-    int dotfiles; /* corresponds to -a flag */
+    int verbose;    /* corresponds to -l flag */
+    int dotfiles;   /* corresponds to -a flag */
 };
 
 void dirprinter(DIR *dfp, char *path, struct options *op);
@@ -30,8 +30,8 @@ int parseoption(char *option, struct options *op);
 
 int main(int argc, char *argv[])
 {
-    struct stat stbuff; /* description of a file */
-    DIR *dfp;           /* directory-file pointer to a typedef for directory description */
+    struct stat stbuff;                 /* description of a file */
+    DIR *dfp;                           /* directory-file pointer to a typedef for directory description */
 
     struct options options = {0, 0};    /* support option flags -l, -a; defaults to off */
     char *name = ".";                   /* use current directory when none is provided */
