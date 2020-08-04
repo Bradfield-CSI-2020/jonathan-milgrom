@@ -1,7 +1,7 @@
 /*
     Implementation of stripped down version of shell script "ls". This program by default
         - lists all the files (and directories) in the directory specified (or current directory)
-        - prints files that are not directories
+        - prints file if file is specified instead of directory
     
     optional flags
         -l: print groupid, userid, file size, name
