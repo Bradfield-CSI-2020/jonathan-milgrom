@@ -104,7 +104,7 @@ int parseoptions(char *option, struct options *op)
 */
 
 char *filepath(char *path, char *name, char *fpath, int lim);
-void fileprinter(char *name, struct stat *s, struct options *o);
+void fileprinter(char *name, struct stat *s, struct options *op);
 void printfile(char *name, struct stat *s);
 
 void dirprinter(DIR *dfp, char *path, struct options *op)
