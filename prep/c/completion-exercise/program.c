@@ -4,8 +4,10 @@
         - prints file if file is specified instead of directory
     
     optional flags
-        -l: print groupid, userid, file size, name
+        -l: print group name, user name, file size, file name
         -a: print files that begin with "."
+    
+    usage: ls [-la] [file]
 */
 #include <stdio.h>
 #include <string.h>
@@ -18,7 +20,7 @@
 
 #define PROGRAM_NAME "ls"
 #define PATH_MAX 100
-#define PRINT_USAGE(void) printf("usage: %s [-la] [file ...]\n", PROGRAM_NAME)
+#define PRINT_USAGE(void) printf("usage: %s [-la] [file]\n", PROGRAM_NAME)
 
 struct options {
     int verbose;    /* corresponds to -l flag */
