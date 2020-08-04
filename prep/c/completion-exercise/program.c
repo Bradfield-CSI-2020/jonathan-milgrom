@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
     struct options options = {0, 0};    /* support option flags -l, -a; defaults to off */
     char *name = ".";                   /* use current directory when none is provided */
 
-    argv++, argc--; /* ./a.out registers as an argument, which we want to ignore. */
+    argc--, argv++; /* ./a.out registers as an argument, which we want to ignore. */
 
     if (!argc-- || strcmp(PROGRAM_NAME, *argv++)) {
         PRINT_USAGE();
