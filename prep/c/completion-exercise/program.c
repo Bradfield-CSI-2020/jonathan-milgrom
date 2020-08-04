@@ -26,7 +26,7 @@ struct options {
 };
 
 void dirprinter(DIR *dfp, char *path, struct options *op);
-int parseoptions(char *option, struct options *o);
+int parseoptions(char *option, struct options *op);
 
 int main(int argc, char *argv[])
 {
@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 
     for (; argc > 0 && **argv == '-'; argc--, argv++) {
         if (parseoptions(++*argv, &options) == 0) {
-            printf("%s: illegal options -- %s\n", PROGRAM_NAME, *argv);
+            printf("%s: illegal option -- %s\n", PROGRAM_NAME, *argv);
             PRINT_USAGE();
             return 0;
         }
@@ -77,17 +77,17 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-int parseoptions(char *option, struct options *o)
+int parseoptions(char *option, struct options *op)
 {
     char c;
 
     while((c = *option++) != '\0') {
         switch (c) {
         case 'l':
-            o->verbose = 1;
+            op->verbose = 1;
             break;
         case 'a':
-            o->dotfiles = 1;
+            op->dotfiles = 1;
             break;
         default:
             return 0;
