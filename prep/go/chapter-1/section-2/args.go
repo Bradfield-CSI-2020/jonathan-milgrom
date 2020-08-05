@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -19,4 +20,12 @@ func main() {
 		s += " " + os.Args[i]
 	}
 	fmt.Println(s)
+
+	s = ""
+	for _, arg := range os.Args[1:] {
+		s += " " + arg
+	}
+	fmt.Println("range:", s)
+
+	fmt.Println("join:", strings.Join(os.Args[1:], " "))
 }
