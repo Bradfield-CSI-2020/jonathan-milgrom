@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func main() {
+func vars() {
 	var a, b, c = 1, 1.2, "hey"
 	fmt.Printf("%d, %g, %s\n", a, b, c)
 
