@@ -2,8 +2,6 @@ package temperature
 
 import "fmt"
 
-const format = "%.2f\u00B0%c"
-
 // Celcius expresses float64 number in celcius units
 type Celcius float64
 
@@ -16,7 +14,7 @@ func (c Celcius) ToF() Fahrenheit {
 }
 
 func (c Celcius) String() string {
-	return fmt.Sprintf(format, c, 'C')
+	return stringify(float64(c), 'C')
 }
 
 // ToC converts type Fahrenheit to a number in celcius units
@@ -25,5 +23,9 @@ func (f Fahrenheit) ToC() Celcius {
 }
 
 func (f Fahrenheit) String() string {
-	return fmt.Sprintf(format, f, 'F')
+	return stringify(float64(f), 'F')
+}
+
+func stringify(degree float64, unit rune) string {
+	return fmt.Sprintf("%.2f\u00B0%c", degree, unit)
 }
