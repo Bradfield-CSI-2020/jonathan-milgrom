@@ -26,7 +26,7 @@ func main() {
 	for i := 0; i < len(archetypal2); i++ {
 		archetypal2[i] = i
 	}
-	fmt.Printf("archetypal2[45]: %d\n", archetypal2[45])
+	fmt.Printf("Array literal archetypal[45]: %d\n", archetypal2[45])
 
 	var a = [...]string{usd: "$", gb: "g", eur: "e"}
 	fmt.Println(a[2]) // => g
