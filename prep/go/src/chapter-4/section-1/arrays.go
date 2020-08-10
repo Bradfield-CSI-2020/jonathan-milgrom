@@ -14,6 +14,13 @@ func main() {
 	fmt.Println(gb)
 	fmt.Printf("%d\n", gb)
 
+	var archetypal [100]int
+
+	for i := 0; i < len(archetypal); i++ {
+		archetypal[i] = i
+	}
+	fmt.Printf("archetypal[45]: %d\n", archetypal[45])
+
 	var a = [...]string{usd: "$", gb: "g", eur: "e"}
 	fmt.Println(a[2]) // => g
 
