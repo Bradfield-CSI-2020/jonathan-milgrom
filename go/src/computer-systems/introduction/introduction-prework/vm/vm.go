@@ -96,11 +96,11 @@ func Compute(memory []byte) {
 	// Keep looping, like a physical computer's clock
 	for {
 		address := int(registers[PC])
-		if address > maxAddress {
+		op, err := fetch(memory, address, maxAddress)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, err.Error())
 			return
 		}
-
-		op := memory[address]
 
 		// decode and execute
 		switch instructionArity[op] {
