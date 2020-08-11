@@ -154,8 +154,8 @@ func Compute(memory []byte) {
 	}
 }
 
-func fetch(memory []byte, index int, max int) (byte, error) {
-	if index > max {
+func fetch(memory []byte, index int, maxIndex int) (byte, error) {
+	if index > maxIndex {
 		return 0, errors.New("memory allocation exceeded")
 	}
 	return memory[index], nil
