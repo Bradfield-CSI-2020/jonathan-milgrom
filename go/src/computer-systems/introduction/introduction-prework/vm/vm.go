@@ -8,16 +8,16 @@ import (
 
 const (
 	// Load a value into memory
-	// usage: Load R1 0x01 		# Load data from byte 1 into register 1
+	// usage: Load R1 0x01	# Load data from byte 1 into register 1
 	Load = 0x01
 	// Store a value in the output byte (0x00) of memory from a register
-	// usage: Store R1 0x00     # Place the value in R1 into the output location
+	// usage: Store R1 0x00	# Place the value in R1 into the output location
 	Store = 0x02
 	// Add two values and store in first
-	// usage: add R1 R2       	# Add the two register values, store the result in r1
+	// usage: add R1 R2 	# Add the two register values, store the result in r1
 	Add = 0x03
 	// Sub (tract) two values and store in first
-	// usage: sub R1 R2			# Set r1 = r1 - r2
+	// usage: sub R1 R2		# Set r1 = r1 - r2
 	Sub = 0x04
 	// Halt program
 	// usage: halt
@@ -26,9 +26,17 @@ const (
 
 // Stretch goals
 const (
+	// Addi (add) for immediate args
+	// usage: Addi R1 4 	# r1 = r1 + 4
 	Addi = 0x05
+	// Subi (sub) for immediate args
+	// usage: Subi R1 4 	# r1 = r1 - 4
 	Subi = 0x06
+	// Jump to an instruction
+	// usage: Jump 0xXX		# Jump 40 will cause the program to continue from the 40th byte in memory
 	Jump = 0x07
+	// Beqz is a conditional instruction: if register is zero offset program counter by supplied amount
+	// usage: Beqz R1 9		# if R1 is 0, increase program counter by 9
 	Beqz = 0x08
 )
 
@@ -36,12 +44,9 @@ const (
 type register int
 
 const (
-	// PC is pogram counter
-	PC register = iota
-	// R1 is the first general purpose register
-	R1
-	// R2 is the second general purpose register
-	R2
+	PC register = iota // PC is pogram counter
+	R1                 // R1 is the first general purpose register
+	R2                 // R2 is the second general purpose register
 )
 
 type arity int
@@ -58,6 +63,10 @@ var instructionArity = map[byte]arity{
 	Add:   binary,
 	Sub:   binary,
 	Halt:  nullary,
+	Addi:  binary,
+	Subi:  binary,
+	Jump:  unary,
+	Beqz:  binary,
 }
 
 // OutputAddress is the address reserved for the progam output
@@ -98,16 +107,46 @@ func Compute(memory []byte) {
 		case nullary:
 			switch op {
 			case Halt:
-				registers[PC]++
 				return
 			}
-		case binary:
-			a, b, err := fetchTwo(memory, address, maxAddress)
+		case unary:
+			a, err := fetch(memory, address+1, maxAddress)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, err.Error())
 				return
 			}
-			handleBinaryInstructions(&registers, memory, op, a, b)
+
+			switch op {
+			case Jump:
+				registers[PC] = a
+			}
+		case binary:
+			a, _ := fetch(memory, address+1, maxAddress)
+			b, err := fetch(memory, address+2, maxAddress)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, err.Error())
+				return
+			}
+
+			switch op {
+			case Load:
+				registers[a] = memory[b]
+			case Store:
+				memory[OutputAddress] = registers[a]
+			case Add:
+				registers[a] += registers[b]
+			case Sub:
+				registers[a] -= registers[b]
+			case Addi:
+				registers[a] += b
+			case Subi:
+				registers[a] -= b
+			case Beqz:
+				if registers[a] == 0 {
+					registers[PC] += b
+				}
+			}
+			registers[PC] += 3
 		default:
 			fmt.Fprintf(os.Stderr, "Unsupported operation %x\n", op)
 			return
@@ -115,28 +154,9 @@ func Compute(memory []byte) {
 	}
 }
 
-func handleBinaryInstructions(registers *[3]byte, memory []byte, op byte, a byte, b byte) {
-	switch op {
-	case Load:
-		register, dataAddress := a, b
-		registers[register] = memory[dataAddress]
-	case Store:
-		register, _ := a, b
-		memory[OutputAddress] = registers[register]
-	case Add:
-		registerA, registerB := a, b
-		registers[registerA] += registers[registerB]
-	case Sub:
-		registerA, registerB := a, b
-		registers[registerA] -= registers[registerB]
+func fetch(memory []byte, index int, max int) (byte, error) {
+	if index > max {
+		return 0, errors.New("memory allocation exceeded")
 	}
-	registers[PC] += 3
-}
-
-func fetchTwo(memory []byte, start int, max int) (byte, byte, error) {
-	second := start + 2
-	if second > max {
-		return 0, 0, errors.New("memory allocation exceeded")
-	}
-	return memory[start+1], memory[second], nil
+	return memory[index], nil
 }
