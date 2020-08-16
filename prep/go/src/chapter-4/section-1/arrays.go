@@ -23,6 +23,9 @@ func main() {
 
 	var archetypal2 = [100]int{}
 
+	for i := 0; i < len(archetypal2); i++ {
+		archetypal2[i] = i
+	}
 	fmt.Printf("Array literal archetypal[45]: %d\n", archetypal2[45])
 
 	var a = [...]string{usd: "$", gb: "g", eur: "e"}
