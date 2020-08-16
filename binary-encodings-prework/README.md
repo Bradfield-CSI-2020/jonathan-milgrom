@@ -79,7 +79,82 @@ Theres are 8 bits in every byte => 2 hex characters in every byte (2 (bits) ^4 =
 
 1.  1010101
 
-    2^7 (64) + 16 + 4 + 1
+    2^6 (64) + 16 + 4 + 1
 
     85
+
+###  Unsigned binary addition
+
+1. 11111111 + 00001101 
+
+    ```
+    11111111
+    +
+    00001101 
+    ____
+    00001100
+    carry out 1
+    ```
+
+### Two’s complement conversion
+
+1. 01111111 + 10000000
+
+    ```
+    01111111
+    +
+    10000000
+    ___
+    11111111
+    ```
+
+    2^8 bits means 256 combinations. with 2's compliment, lowest order 2^7 are reserved for positive numbers plus zero (normal binary representation) the higher order 2^7 are reserved for negative.
+
+    This means that highest order positve number is
+    01111111 = 2^6 (64) + 32 + 16 + 8 + 4 + 2 + 1 = 127
+    10000000 = the most negative number (addition afterall should make it less negative) = -128
+
+    -128 + 127 should give us -1
+
+    and indeed it does: 11111111 (the highest order bit arrangement is the least negative number)
+
+    Notice that the highest absolute value for n bits comes from -2^(n-1); where as the highest absolute value for unsigned n bits is 2^n - 1.
+
+## Byte ordering
+
+### Its over 9001
+
+"file 9001"
+
+raw bits: 00100011 00101001
+in hex: 23 29
+
+big-endian means what it looks like above
+
+16^3 (2) + 16^2 (3) + 16 (2) + 9 = 9001
+
+Big endian!
+
+### TCP
+
+TCP Header: af00bc06441e7368eff2a00281ff5600 (32 chars)
+
+(2 hex chars per byte => 16 bytes)
+
+Looking at [the protocal](https://en.wikipedia.org/wiki/Transmission_Control_Protocol#TCP_segment_structure):
+
+```
+af00: source port (44800)
+bc06: destination port (48134)
+441e7368: sequence number (1142846312)
+eff2a002: ack number (4025655298)
+81ff: a bunch of stuff
+5600: window size
+```
+
+## IEEE Floating Point
+
+
+
+
 
