@@ -8,8 +8,8 @@ binary_convert:
 				xor rax, rax				; sum = 0 (rax)
 compare:	
 				movzx rsi, byte [rdi + rdx]	; c = s[index] (rsi)
-				mov r8, rsi 				; i = c; going to calculate integer value
-				sub r8, 48 					; subtract ascii of 0 (48), order to get value of c
+				mov r8, rsi 				; i = c; will be used to calculate integer value (r8)
+				sub r8, 48 					; subtract ascii of 0 (48), in order to get integer value of c
 				cmp rsi, 0					; NUL character is 0
 				jnz convert
 				ret
