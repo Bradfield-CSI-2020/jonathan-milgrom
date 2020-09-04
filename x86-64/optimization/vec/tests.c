@@ -1,6 +1,6 @@
 #include "vendor/unity.h"
-
 #include "vec.h"
+#include <locale.h>
 
 extern data_t dotproduct(vec_ptr, vec_ptr);
 
@@ -54,12 +54,33 @@ void test_longer(void) {
   free_vec(v);
 }
 
+void print_perf(long n) {
+  vec_ptr u = new_vec(n);
+  vec_ptr v = new_vec(n);
+  
+  clock_t start, finish;
+
+  for (long i = 0; i < n; i++) {
+    set_vec_element(u, i, i + 1);
+    set_vec_element(v, i, i + 1);
+  }
+
+  start = clock();
+  dotproduct(u, v);
+  finish = clock();
+
+  setlocale(LC_NUMERIC, "");
+  printf("Running a dot product of length %'ld at %.8f", n, (((double) (finish - start)) / CLOCKS_PER_SEC));
+}
+
 int main(void) {
     UNITY_BEGIN();
 
     RUN_TEST(test_empty);
     RUN_TEST(test_basic);
     RUN_TEST(test_longer);
+
+    print_perf(10000000);
 
     return UNITY_END();
 }
