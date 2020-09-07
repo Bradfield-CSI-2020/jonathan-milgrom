@@ -1,9 +1,8 @@
-const stack = [];
 
 /**
  * Explicit Stack Fibannoci.
  * 
- * Recursive fib (f(n) = fn(n-1) + f(n-2)) build up addition operations
+ * Recursive fib (f(n) = fn(n-1) + f(n-2)) will build up addition operations
  * on the call stack e.g:
  * 
  *  f(3)
@@ -15,9 +14,8 @@ const stack = [];
  * We want to model this behavior explicitly with a stack
  * 
  * Steps:
- *  
- *  pop x0, x1 from stack
- *  if x > 1, push x-1, x-2 unto stack
+ *  if children (n - 1 > 1), enqueue stack
+ *  pop, then add.
  *  
  * @param {*} n 
  */
@@ -26,13 +24,19 @@ const stackFib = (n) => {
         return n;
     }
 
-    stack.push(n - 1);
-    stack.push(n - 2);
+    let total = 0;
+    const stack = [];
+    stack.push(n);
 
     while (stack.length) {
-        const [x1, x2] = [stack.pop(), stack.pop()];
-        if (x1 <= 1) {
-            stack.push();
+        const next = stack.pop();
+        if (next <= 1) {
+            total+=next;
+        } else {
+            stack.push(next-1);
+            stack.push(next-2);
         }
     }
+
+    return total;
 };
