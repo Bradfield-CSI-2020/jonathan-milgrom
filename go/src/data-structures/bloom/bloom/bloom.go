@@ -2,6 +2,11 @@ package bloom
 
 import (
 	"encoding/binary"
+	"hash/fnv"
+)
+
+const (
+	size = 10000000
 )
 
 type BloomFilter interface {
@@ -16,24 +21,33 @@ type BloomFilter interface {
 }
 
 type trivialBloomFilter struct {
-	data []uint64
+	data []byte
 }
 
 func NewTrivialBloomFilter() *trivialBloomFilter {
 	return &trivialBloomFilter{
-		data: make([]uint64, 1000),
+		data: make([]byte, size),
 	}
 }
 
 func (b *trivialBloomFilter) Add(item string) {
-	// Do nothing
+	index := hash(item)
+	b.data[index] = 1
 }
 
 func (b *trivialBloomFilter) MaybeContains(item string) bool {
 	// Technically, any item "might" be in the set
-	return true
+	index := hash(item)
+	return b.data[index] == 1
 }
 
 func (b *trivialBloomFilter) MemoryUsage() int {
 	return binary.Size(b.data)
+}
+
+func hash(item string) uint32 {
+	hash := fnv.New32()
+	hash.Write([]byte(item))
+	number := hash.Sum32()
+	return number % size
 }
