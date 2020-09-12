@@ -2,11 +2,13 @@ package bloom
 
 import (
 	"encoding/binary"
+	"hash"
+	"hash/adler32"
 	"hash/fnv"
 )
 
 const (
-	size = 10000000
+	size = 1000000
 )
 
 type BloomFilter interface {
@@ -31,23 +33,26 @@ func NewTrivialBloomFilter() *trivialBloomFilter {
 }
 
 func (b *trivialBloomFilter) Add(item string) {
-	index := hash(item)
-	b.data[index] = 1
+	i1, i2 := doublehash(item)
+	b.data[i1] = 1
+	b.data[i2] = 1
 }
 
 func (b *trivialBloomFilter) MaybeContains(item string) bool {
-	// Technically, any item "might" be in the set
-	index := hash(item)
-	return b.data[index] == 1
+	i1, i2 := doublehash(item)
+	return b.data[i1] == 1 && b.data[i2] == 1
 }
 
 func (b *trivialBloomFilter) MemoryUsage() int {
 	return binary.Size(b.data)
 }
 
-func hash(item string) uint32 {
-	hash := fnv.New32()
-	hash.Write([]byte(item))
-	number := hash.Sum32()
+func doublehash(item string) (uint32, uint32) {
+	return stringToIntModulo(fnv.New32(), item), stringToIntModulo(adler32.New(), item)
+}
+
+func stringToIntModulo(h hash.Hash32, item string) uint32 {
+	h.Write([]byte(item))
+	number := h.Sum32()
 	return number % size
 }
