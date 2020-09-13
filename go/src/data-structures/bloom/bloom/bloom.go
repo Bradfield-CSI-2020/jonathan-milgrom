@@ -48,11 +48,10 @@ func (b *trivialBloomFilter) MemoryUsage() int {
 }
 
 func doublehash(item string) (uint32, uint32) {
-	return stringToIntModulo(fnv.New32(), item), stringToIntModulo(adler32.New(), item)
+	return stringToInt(fnv.New32(), item) % size, stringToInt(adler32.New(), item) % size
 }
 
-func stringToIntModulo(h hash.Hash32, item string) uint32 {
+func stringToInt(h hash.Hash32, item string) uint32 {
 	h.Write([]byte(item))
-	number := h.Sum32()
-	return number % size
+	return h.Sum32()
 }
