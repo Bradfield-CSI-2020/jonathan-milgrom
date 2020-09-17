@@ -1,6 +1,7 @@
 package bloom
 
 import (
+	"data-structures/bloom/bitVector"
 	"encoding/binary"
 	"hash"
 	"hash/adler32"
@@ -8,7 +9,7 @@ import (
 )
 
 const (
-	size = 1000000
+	size = 800000
 )
 
 type BloomFilter interface {
@@ -20,31 +21,39 @@ type BloomFilter interface {
 
 	// Number of bytes used in any underlying storage
 	MemoryUsage() int
+
+	String() string
 }
 
-type trivialBloomFilter struct {
-	data []byte
+type bloomFilter struct {
+	data bitVector.BitVector
 }
 
-func NewTrivialBloomFilter() *trivialBloomFilter {
-	return &trivialBloomFilter{
-		data: make([]byte, size),
+func NewBloomFilter() *bloomFilter {
+	return &bloomFilter{
+		data: bitVector.Make(size),
 	}
 }
 
-func (b *trivialBloomFilter) Add(item string) {
-	i1, i2 := doublehash(item)
-	b.data[i1] = 1
-	b.data[i2] = 1
+func (b *bloomFilter) Add(item string) {
+	index1, index2 := doublehash(item)
+	// fmt.Printf("Add: index 1: %d, index 2: %d\n", int(index1), int(index2))
+	b.data.Set(int(index1))
+	b.data.Set(int(index2))
 }
 
-func (b *trivialBloomFilter) MaybeContains(item string) bool {
-	i1, i2 := doublehash(item)
-	return b.data[i1] == 1 && b.data[i2] == 1
+func (b *bloomFilter) MaybeContains(item string) bool {
+	index1, index2 := doublehash(item)
+	// fmt.Printf("MaybeContains: index 1: %d, index 2: %d\n", int(index1), int(index2))
+	return b.data.Has(int(index1)) && b.data.Has(int(index2))
 }
 
-func (b *trivialBloomFilter) MemoryUsage() int {
+func (b *bloomFilter) MemoryUsage() int {
 	return binary.Size(b.data)
+}
+
+func (b *bloomFilter) String() string {
+	return b.data.String()
 }
 
 func doublehash(item string) (uint32, uint32) {
