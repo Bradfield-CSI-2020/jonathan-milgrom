@@ -37,14 +37,12 @@ func NewBloomFilter() *bloomFilter {
 
 func (b *bloomFilter) Add(item string) {
 	index1, index2 := doublehash(item)
-	// fmt.Printf("Add: index 1: %d, index 2: %d\n", int(index1), int(index2))
 	b.data.Set(int(index1))
 	b.data.Set(int(index2))
 }
 
 func (b *bloomFilter) MaybeContains(item string) bool {
 	index1, index2 := doublehash(item)
-	// fmt.Printf("MaybeContains: index 1: %d, index 2: %d\n", int(index1), int(index2))
 	return b.data.Has(int(index1)) && b.data.Has(int(index2))
 }
 
