@@ -9,4 +9,5 @@ func main() {
 	var c temperature.Celcius = 100
 	fmt.Printf("to fahr: %s\n", c.ToF())
 	fmt.Printf("back to celc: %s\n", c.ToF().ToC())
+	c.Test()
 }
