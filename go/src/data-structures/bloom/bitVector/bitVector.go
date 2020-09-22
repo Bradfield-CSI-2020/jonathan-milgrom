@@ -33,7 +33,7 @@ func (b BitVector) String() string {
 
 func locate(decimal int) (int, int) {
 	/*
-		Identify the block of memory in the []uint16 array.
+		Identify the block of memory in the []uint64 array.
 		e.g
 			13 / 64 => 0th block
 			78 / 64 => 1st block
@@ -41,7 +41,7 @@ func locate(decimal int) (int, int) {
 	block := decimal / blockSize
 
 	/*
-		Identify the correct binary representation of block
+		Identify which bit in the block to target, and represent as a binary integer
 		e.g.
 			4: 1 << (4 % 64) => 1 << 4 => 0b10000 (i.e the 4th index)
 	*/
